@@ -27,11 +27,12 @@ Remote_debugger = function () {
       var img = document.getElementById('remote_debugger_img');
       img.src = uri;
     } else {
-      var xmlhttp = this.getXmlHttp()
-      xmlhttp.open('GET', uri, false);
-      xmlhttp.send(null);
-      if(xmlhttp.status == 200) {
-        alert(xmlhttp.responseText);
+      try {
+        var xmlhttp = this.getXmlHttp()
+        xmlhttp.open('GET', uri, false);
+        xmlhttp.send(null);
+      } catch(e) {
+
       }
     }
   };
