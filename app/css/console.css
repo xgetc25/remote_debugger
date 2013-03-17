@@ -1,0 +1,81 @@
+body {
+	padding: 5px;
+}
+
+.navbar {
+	position:absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	margin:0;
+}
+
+.request {
+	color: #1289ff;
+}
+
+.request:before {
+	font-family: FontAwesome;
+    content: "\f054";
+    color: #888888;
+}
+
+.answer.log {
+	color: #4730d8;
+}
+
+.answer.log:before {
+	font-family: FontAwesome;
+    content: "\f053";
+    color: #888888;
+}
+
+.answer.error {
+	color: #ff0000;
+}
+
+.answer.error:before {
+	font-family: FontAwesome;
+    content: "\f057";
+}
+
+.answer.warn {
+	color: #4730d8;
+}
+
+.answer.warn:before {
+	font-family: FontAwesome;
+    content: "\f071";
+	color: #ebbb2c;
+}
+
+.answer.info {
+	color: #aaaaaa;
+}
+
+.answer.info:before {
+	font-family: FontAwesome;
+    content: "\f053";
+    color: #888888;
+}
+
+.current_request {
+	position: relative;
+}
+
+.current_request > i {
+	position: absolute;
+	top: 4px;
+	color: #000000;
+}
+
+.current_request > input {
+	width: 100%;
+	border: none;
+	border-radius: 0;
+	-webkit-box-shadow: none;
+	-webkit-box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	padding-left: 14px;
+}
