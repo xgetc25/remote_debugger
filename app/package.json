@@ -7,7 +7,7 @@
     "icon": "../ico.png",
     "toolbar": false,
     "width": 800,
-    "height": 500,
+    "height": 600,
     "position": "center",
     "min_width": 400,
     "min_height": 100
