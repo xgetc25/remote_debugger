@@ -104,7 +104,17 @@ body {
 	min-height: 30px !important;
 }
 
+.panel  ul {
+	position: relative;
+	width: 100%;
+}
+
 .panel li > a {
 	padding: 5px !important;
 	margin: 0;
 } 
+
+.panel  li.about {
+	position: absolute;
+	right: 0;
+}

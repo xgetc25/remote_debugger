@@ -1,7 +1,7 @@
 Remote_debugger = function () {
   this.options = {
     'use_img_for_send':false,
-    'server':'127.0.0.1:7760'
+    'server':'%server_ip:%server_port'
   };
 
   this.getXmlHttp = function (){

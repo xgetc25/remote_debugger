@@ -1,8 +1,11 @@
 top.params = {
 	'server' : {
+		'ip' : '127.0.0.1',
 		'port' : 7760
 	}
 };
+
+$.extend(top.params,top.config);
 
 $(document).ready(function() {
 	init_server();
@@ -13,15 +16,18 @@ $(document).ready(function() {
 	  }
 	});
 
-
 	$('.panel a[href=\'#clear\']').click(function(){
 		$('.console').html('');
 	});
 
-	$('.console').html('<strong>НАЧАЛО</strong>'
-		+ '<p>Для запуска скрипта добавьте на своей странице в BODY:<pre><code>&lt;script src="http://127.0.0.1:' + params.server.port + '/rd.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre></p>'
-		+ '<p>Что бы отправить сообщение в консоль выполните в своем коде одну из функций:<pre><code>rd.log(\'MESSAGE\');\nrd.info(\'MESSAGE\');\nrd.error(\'MESSAGE\');\nrd.warn(\'MESSAGE\');</code></pre></p>'
-		+ '<p><strong>TODO</strong></p><ul><li>Отправка сообщений из консоли.</li></ul>'
+	$('.panel a[href=\'#about\']').click(function(){
+		var gui = require('nw.gui');
+		gui.Shell.openExternal('https://github.com/bespechnost/remote_debugger');
+	});
+
+	$('.console').html('<img src=./../ico.png style="float: left"><h1 style="font-size:40px">Remote debugger</h1>'
+		+ '<p style="margin-top:20px">Для запуска скрипта добавьте в BODY:<pre><code>&lt;script src="http://'+params.server.ip+':' + params.server.port + '/rd.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre></p>'
+		+ '<p style="margin-top:20px">Для отправки сообщения используйте:<pre><code>rd.log(\'MESSAGE\');\nrd.info(\'MESSAGE\');\nrd.error(\'MESSAGE\');\nrd.warn(\'MESSAGE\');</code></pre></p>'
 	);
 	
 	scroll_bottom();
@@ -52,7 +58,7 @@ function print_answer(text,type) {
 
 	$('.console').get(0).appendChild(answer);
 	
-	$("html,body").animate({"scrollTop":$("html,body").height()},100);
+	scroll_bottom();
 }
 
 function send_msg(code) {
@@ -71,7 +77,8 @@ function init_server() {
 			var fs = require('fs');
 			fs.readFile('./js/rd.js', 'utf8', function (err,data) {
 				res.writeHead(200, {'Content-Type': 'text/javascript'});
-				res.end(data);
+				var answer = data.replace(/%server_ip/g,top.params.server.ip).replace(/%server_port/g,top.params.server.port)
+				res.end(answer);
 			});
 
 		} else {
