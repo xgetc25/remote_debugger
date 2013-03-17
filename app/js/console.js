@@ -12,6 +12,20 @@ $(document).ready(function() {
 	  	send_msg($('.current_request input').val());
 	  }
 	});
+
+
+	$('.panel a[href=\'#clear\']').click(function(){
+		$('.console').html('');
+	});
+
+	$('.console').html('<strong>НАЧАЛО</strong>'
+		+ '<p>Для запуска скрипта добавьте на своей странице в BODY:<pre><code>&lt;script src="http://127.0.0.1:' + params.server.port + '/rd.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre></p>'
+		+ '<p>Что бы отправить сообщение в консоль выполните в своем коде одну из функций:<pre><code>rd.log(\'MESSAGE\');\nrd.info(\'MESSAGE\');\nrd.error(\'MESSAGE\');\nrd.warn(\'MESSAGE\');</code></pre></p>'
+		+ '<p><strong>TODO</strong></p><ul><li>Отправка сообщений из консоли.</li></ul>'
+	);
+	
+	scroll_bottom();
+
 });
 
 function print_request(text) {
@@ -21,7 +35,11 @@ function print_request(text) {
 
 	$('.console').get(0).appendChild(request);
 	
-	$("html,body").animate({"scrollTop":$("html,body").height()},100);
+	scroll_bottom();
+}
+
+function scroll_bottom() {
+	$(".wrapper_console").animate({"scrollTop":$(".console").height()},100);
 }
 
 function print_answer(text,type) {
@@ -69,10 +87,4 @@ function init_server() {
 		}
 
 	}).listen(params.server.port, '0.0.0.0');
-	
-	$('.console').html('<strong>НАЧАЛО</strong>'
-		+ '<p>Для запуска скрипта добавьте на своей странице в BODY:<pre><code>&lt;script src="http://127.0.0.1:' + params.server.port + '/rd.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre></p>'
-		+ '<p>Что бы отправить сообщение в консоль выполните в своем коде одну из функций:<pre><code>rd.log(\'MESSAGE\');\nrd.info(\'MESSAGE\');\nrd.error(\'MESSAGE\');\nrd.warn(\'MESSAGE\');</code></pre></p>'
-		+ '<p><strong>TODO</strong></p><ul><li>Отправка сообщений из консоли.</li></ul>'
-	);
 }
