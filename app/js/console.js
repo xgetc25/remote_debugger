@@ -68,7 +68,7 @@ function init_server() {
 			res.end('');
 		}
 
-	}).listen(params.server.port, '127.0.0.1');
+	}).listen(params.server.port, '0.0.0.0');
 	
 	$('.console').html('<strong>НАЧАЛО</strong>'
 		+ '<p>Для запуска скрипта добавьте на своей странице в BODY:<pre><code>&lt;script src="http://127.0.0.1:' + params.server.port + '/rd.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre></p>'
