@@ -16,16 +16,21 @@ $.extend(top.params,top.config);
 $(document).ready(function() {
 	init_server();
 
-	$('.current_request input').keyup(function(k) {
+	$('.current_request input').keydown(function(k) {
 		switch (k.keyCode) {
-			case 13:
-				send_msg($('.current_request input').val());
-				break
 			case 38:
 				history(true);
 				break
 			case 40:
 				history(false);
+				break
+		}
+	});
+
+	$('.current_request input').keyup(function(k) {
+		switch (k.keyCode) {
+			case 13:
+				send_msg($('.current_request input').val());
 				break
 			default:
 				top.console_history.last = $('.current_request input').val();
@@ -89,7 +94,7 @@ function print_request(text) {
 }
 
 function scroll_bottom() {
-	$(".wrapper_console").animate({"scrollTop":$(".console").height()},100);
+	$(".wrapper_console").animate({"scrollTop":$(".console").height()},0);
 }
 
 function print_answer(text,type) {
