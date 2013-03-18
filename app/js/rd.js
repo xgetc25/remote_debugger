@@ -22,15 +22,16 @@ Remote_debugger = function () {
   };
 
   this.send = function(m,t) {
-    var uri = 'http://' + this.options.server + '/1.txt?t=' + t + '&m=' + m;
+    var uri = 'http://' + this.options.server + '/1.txt';
     if (rd.options.use_img_for_send) {
       var img = document.getElementById('remote_debugger_img');
-      img.src = uri;
+      img.src = uri + '?t=' + t + '&m=' + m;
     } else {
       try {
         var xmlhttp = this.getXmlHttp()
-        xmlhttp.open('GET', uri, false);
-        xmlhttp.send(null);
+        xmlhttp.open('POST', uri + '?t=' + t, false);        
+        xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        xmlhttp.send(m);
       } catch(e) {
 
       }

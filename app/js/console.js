@@ -24,12 +24,7 @@ $(document).ready(function() {
 		var gui = require('nw.gui');
 		gui.Shell.openExternal('https://github.com/bespechnost/remote_debugger');
 	});
-
-	/*$('.console').html('<img src=./../ico.png style="float: left"><h1 style="font-size:40px">Remote debugger</h1>'
-		+ '<p style="margin-top:20px">Для запуска скрипта добавьте в BODY:<pre><code>&lt;script src="http://'+params.server.ip+':' + params.server.port + '/rd.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre></p>'
-		+ '<p style="margin-top:20px">Для отправки сообщения используйте:<pre><code>rd.log(\'MESSAGE\');\nrd.info(\'MESSAGE\');\nrd.error(\'MESSAGE\');\nrd.warn(\'MESSAGE\');</code></pre></p>'
-	);*/
-	
+		
 	scroll_bottom();
 
 });
@@ -83,11 +78,10 @@ function init_server() {
 
 		} else {
 
-			var get_params = url_parts.query;
-
-			if (get_params.t && get_params.m) {
-				print_answer(get_params.m, get_params.t);	
-			}
+			req.on('data', function(chunk) {
+				var get_params = url_parts.query;
+				print_answer(chunk.toString(), get_params.t);	
+			});
 
 			res.writeHead(200, {'Content-Type': 'text/plain'});
 			res.end('');
