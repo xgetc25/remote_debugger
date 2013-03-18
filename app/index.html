@@ -17,15 +17,15 @@
 <img src=./../ico.png style="float: left">
 <h1 style="font-size:40px">Remote debugger</h1>
 <p style="margin-top:20px">Для запуска скрипта добавьте в BODY:
-  <pre><code>&lt;script src="http://<script>document.write(params.server.ip)</script>:<script>document.write(params.server.port)</script>/rd.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre>
+  <pre><code style="-webkit-user-select: initial;">&lt;script src="http://<script>document.write(params.server.ip)</script>:<script>document.write(params.server.port)</script>/rd.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre>
   </p>
-    <p style="margin-top:20px">и создайте в корне приложения файл с настройками:<pre><code>top.config = {
+    <p style="margin-top:20px">и создайте в корне приложения файл с настройками:<pre><code style="-webkit-user-select: initial;">top.config = {
   'server' : {
     'ip' : '192.168.0.2',
     'port' : 7760
   }
 };</code></pre></p>
-    <p style="margin-top:20px">Для отправки сообщения используйте:<pre><code>rd.log('MESSAGE');
+    <p style="margin-top:20px">Для отправки сообщения используйте:<pre><code style="-webkit-user-select: initial;">rd.log('MESSAGE');
 rd.info('MESSAGE');
 rd.error('MESSAGE');
 rd.warn('MESSAGE');</code></pre></p>

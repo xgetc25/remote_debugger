@@ -1,6 +1,7 @@
 html,body {
 	height: 100%;
 	width: 100%;
+	-webkit-user-select: none;
 }
 
 body {
@@ -16,12 +17,18 @@ body {
 
 .request {
 	color: #1289ff;
+	-webkit-user-select: initial;
 }
 
 .request:before {
 	font-family: FontAwesome;
     content: "\f054";
-    color: #888888;
+    color: #888888;    
+	-webkit-user-select: initial;
+}
+
+.answer {
+	-webkit-user-select: initial;
 }
 
 .answer.log {
@@ -32,6 +39,7 @@ body {
 	font-family: FontAwesome;
     content: "\f053";
     color: #888888;
+	-webkit-user-select: initial;
 }
 
 .answer.error {
@@ -41,6 +49,7 @@ body {
 .answer.error:before {
 	font-family: FontAwesome;
     content: "\f057";
+	-webkit-user-select: initial;
 }
 
 .answer.warn {
@@ -51,6 +60,7 @@ body {
 	font-family: FontAwesome;
     content: "\f071";
 	color: #ebbb2c;
+	-webkit-user-select: initial;
 }
 
 .answer.info {
@@ -61,6 +71,7 @@ body {
 	font-family: FontAwesome;
     content: "\f053";
     color: #888888;
+	-webkit-user-select: initial;
 }
 
 .current_request {
