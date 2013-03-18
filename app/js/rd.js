@@ -57,6 +57,7 @@ Remote_debugger = function () {
           rd.error(e);
         }
       }
+      setTimeout(function(){rd.init_comet();},100);
     }
     xmlhttp.send(null);
   }
