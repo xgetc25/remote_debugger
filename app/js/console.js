@@ -72,7 +72,10 @@ function history(up) {
 }
 
 function print_request(text) {
-	top.console_history.history.push(text);
+	if (top.console_history.history.length == 0 || top.console_history.history[top.console_history.history.length - 1] !== text) {
+		top.console_history.history.push(text);
+	}
+
 	top.console_history.last = '';
 	top.console_history.current = 0;
 
@@ -137,6 +140,7 @@ function init_server() {
 					top.res_comet = false;
 			});
 		} else {
+
 			req.on('data', function(chunk) {
 				var get_params = url_parts.query;
 				print_answer(chunk.toString(), get_params.t);	
