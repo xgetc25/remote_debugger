@@ -5,20 +5,23 @@ Remote_debugger = function () {
   };
 
   this.getXmlHttp = function (){
-  var xmlhttp;
-  try {
-  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-  } catch (e) {
-  try {
-  xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-  } catch (E) {
-  xmlhttp = false;
-  }
-  }
-  if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
-  xmlhttp = new XMLHttpRequest();
-  }
-  return xmlhttp;
+    var xmlhttp;
+
+    try {
+      xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (e) {
+      try {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (E) {
+        xmlhttp = false;
+      }
+    }
+
+    if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+      xmlhttp = new XMLHttpRequest();
+    }
+
+    return xmlhttp;
   };
 
   this.send = function(m,t) {
@@ -37,6 +40,30 @@ Remote_debugger = function () {
       }
     }
   };
+
+  this.init_comet = function() {
+    var uri = 'http://' + this.options.server + '/comet.json';
+    
+    var xmlhttp = this.getXmlHttp()
+    xmlhttp.open('POST', uri, true);        
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+    xmlhttp.onreadystatechange=function(){
+      if (xmlhttp.readyState != 4) return;
+      if (xmlhttp.status == 200) {
+        try {
+          rd.answer(eval(xmlhttp.responseText));
+        } catch(e) {
+          rd.error(e);
+        }
+      }
+    }
+    xmlhttp.send(null);
+  }
+
+  this.answer = function(t){
+    this.send(t,'return');
+  }
 
   this.log = function(t){
     this.send(t,'log');
@@ -57,9 +84,8 @@ Remote_debugger = function () {
 };
 
 var rd = new Remote_debugger();
-
 if (rd.options.use_img_for_send) {
-document.writeln('<img id="remote_debugger_img" style="display:none;">');
+  document.writeln('<img id="remote_debugger_img" style="display:none;">');
 }
-
+rd.init_comet();
 rd.info('Соединение c JS установлено');
