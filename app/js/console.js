@@ -45,6 +45,10 @@ $(document).ready(function() {
 		var gui = require('nw.gui');
 		gui.Shell.openExternal('https://github.com/bespechnost/remote_debugger');
 	});
+
+	$('.wrapper_console').click(function(){
+		$('.current_request input').focus();
+	});
 		
 	scroll_bottom();
 
