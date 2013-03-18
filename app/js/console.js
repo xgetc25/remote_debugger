@@ -5,15 +5,31 @@ top.params = {
 	}
 };
 
+top.console_history = {
+	'last': '',
+	'current' : 0,
+	'history' : []
+};
+
 $.extend(top.params,top.config);
 
 $(document).ready(function() {
 	init_server();
 
-	$('.current_request input').keypress(function(k) {
-	  if (k.charCode == 13) {
-	  	send_msg($('.current_request input').val());
-	  }
+	$('.current_request input').keyup(function(k) {
+		switch (k.keyCode) {
+			case 13:
+				send_msg($('.current_request input').val());
+				break
+			case 38:
+				history(true);
+				break
+			case 40:
+				history(false);
+				break
+			default:
+				top.console_history.last = $('.current_request input').val();
+		}
 	});
 
 	$('.panel a[href=\'#clear\']').click(function(){
@@ -29,7 +45,37 @@ $(document).ready(function() {
 
 });
 
+function history(up) {
+	var history = [''];
+	
+	for (var i in top.console_history.history) {
+		history.push(top.console_history.history[i]);
+	}
+	
+	if (top.console_history.last !== '') {
+		history.push(top.console_history.last);
+	}
+
+	if (up) {
+		if (top.console_history.current == history.length) {
+			return;
+		}
+		top.console_history.current = top.console_history.current + 1;
+	} else {
+		if (top.console_history.current == 1) {
+			return;
+		}
+		top.console_history.current = top.console_history.current - 1;
+	}
+
+	$('.current_request input').val( history[history.length - top.console_history.current] );
+}
+
 function print_request(text) {
+	top.console_history.history.push(text);
+	top.console_history.last = '';
+	top.console_history.current = 0;
+
 	var request = document.createElement('div');
 	request.innerText = ' ' + text;
 	request.className = 'request';
