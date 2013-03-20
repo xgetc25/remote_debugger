@@ -136,7 +136,13 @@ function init_server() {
 			var fs = require('fs');
 			fs.readFile('./js/rd.js', 'utf8', function (err,data) {
 				res.writeHead(200, {'Content-Type': 'text/javascript'});
-				var answer = data.replace(/%server_ip/g,top.params.server.ip).replace(/%server_port/g,top.params.server.port)
+				var answer = data.replace(/%server_ip/g,top.params.server.ip);
+				answer = answer.replace(/%server_port/g,top.params.server.port);
+				answer = answer.replace(/%use_img_for_send/g,top.params.server.use_img_for_send);
+				answer = answer.replace(/%use_rnd_in_img_for_send/g,top.params.server.use_rnd_in_img_for_send);
+				answer = answer.replace(/%use_comet/g,top.params.server.use_comet);
+				answer = answer.replace(/%xmlhttp_object/g,top.params.server.xmlhttp_object);
+				
 				res.end(answer);
 			});
 
@@ -148,6 +154,16 @@ function init_server() {
 					res.end('');
 					top.res_comet = false;
 			});
+
+		} else if (url_parts.pathname == '/img.gif') {
+			var get_params = url_parts.query;
+
+			if (get_params.t && get_params.m) {
+				print_answer(get_params.m, get_params.t);  
+			}
+
+			res.writeHead(200, {'Content-Type': 'application/json',  'Access-Control-Allow-Origin': '*'});
+			res.end('');
 		} else {
 
 			req.on('data', function(chunk) {

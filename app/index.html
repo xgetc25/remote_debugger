@@ -22,10 +22,14 @@
     <p style="margin-top:20px">и создайте в корне приложения файл с настройками:<pre><code style="-webkit-user-select: initial;">top.config = {
   'server' : {
     'ip' : '192.168.0.2',
-    'port' : 7760
+    'port' : 7760,
+    'use_img_for_send' : 'false',
+    'use_rnd_in_img_for_send' : 'true',
+    'use_comet' : 'true',
+    'xmlhttp_object' : 'new XMLHttpRequest()' ActiveXObject("Msxml2.XMLHTTP") или new XMLHttpRequest()
   }
 };</code></pre></p>
-    <p style="margin-top:20px">Для отправки сообщения используйте:<pre><code style="-webkit-user-select: initial;">rd.log('MESSAGE');
+    <p style="margin-top:20px">Для отправки сообщения используйте одну из команд:<pre><code style="-webkit-user-select: initial;">rd.log('MESSAGE');
 rd.info('MESSAGE');
 rd.error('MESSAGE');
 rd.warn('MESSAGE');</code></pre></p>

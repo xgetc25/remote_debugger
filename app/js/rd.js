@@ -1,38 +1,29 @@
 Remote_debugger = function () {
   this.options = {
-    'use_img_for_send':false,
+    'use_img_for_send':%use_img_for_send,
+    'use_rnd_in_img_for_send':%use_rnd_in_img_for_send,
+    'comet':%use_comet,
     'server':'%server_ip:%server_port'
   };
 
   this.getXmlHttp = function (){
-    var xmlhttp;
-
-    try {
-      xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-    } catch (e) {
-      try {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-      } catch (E) {
-        xmlhttp = false;
-      }
-    }
-
-    if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
-      xmlhttp = new XMLHttpRequest();
-    }
-
-    return xmlhttp;
+    return %xmlhttp_object;
   };
 
   this.send = function(m,t) {
-    var uri = 'http://' + this.options.server + '/1.txt';
+    var uri = 'http://' + this.options.server;
     if (rd.options.use_img_for_send) {
       var img = document.getElementById('remote_debugger_img');
-      img.src = uri + '?t=' + t + '&m=' + m;
+      if (rd.options.use_rnd_in_img_for_send == true) {
+        var rnd = '&r=' + Math.random();
+      } else {
+        var rnd = '';
+      }
+      img.src = uri + '/img.gif?t=' + t + '&m=' + m + rnd;
     } else {
       try {
         var xmlhttp = this.getXmlHttp()
-        xmlhttp.open('POST', uri + '?t=' + t, false);        
+        xmlhttp.open('POST', uri + '/1.txt?t=' + t, false);        
         xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         xmlhttp.send(m);
       } catch(e) {
@@ -88,5 +79,9 @@ var rd = new Remote_debugger();
 if (rd.options.use_img_for_send) {
   document.writeln('<img id="remote_debugger_img" style="display:none;">');
 }
-rd.init_comet();
+
+if (rd.options.comet) {
+  rd.init_comet();
+}
+
 rd.info('Соединение c JS установлено');
