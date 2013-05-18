@@ -10,7 +10,28 @@ Remote_debugger = function () {
     return %xmlhttp_object;
   };
 
-  this.send = function(m,t) {
+/**
+ *
+ * @param t {{String}}
+ * @param m {{Array}}
+ */
+  this.send = function( t, m )
+  {
+    for( var i = 0; i < m.length; i++ )
+    {
+        var lineNum = false;
+        if(m.length > 1 )
+        {
+            lineNum = true;
+        }
+        if( typeof( m[i] ) != 'string' )
+        {
+            m[i] = ( lineNum ? i+'. ' : '' ) + JSON.stringify( m[i] );
+        }
+
+    }
+    m = m.join('<br>');
+
     var uri = 'http://' + this.options.server;
     if (rd.options.use_img_for_send) {
       var img = document.getElementById('remote_debugger_img');
@@ -53,24 +74,29 @@ Remote_debugger = function () {
     xmlhttp.send(null);
   }
 
-  this.answer = function(t){
-    this.send(t,'return');
+  this.answer = function(t)
+  {
+    this.send( 'return', arguments );
   }
 
-  this.log = function(t){
-    this.send(t,'log');
+  this.log = function(t)
+  {
+    this.send( 'log', arguments );
   }
 
-  this.info = function(t){
-    this.send(t,'info');
+  this.info = function(t)
+  {
+    this.send( 'info', arguments );
   }
 
-  this.error = function(t){
-    this.send(t,'error');
+  this.error = function(t)
+  {
+    this.send( 'error', arguments );
   }
 
-  this.warn = function(t){
-    this.send(t,'warn');
+  this.warn = function(t)
+  {
+    this.send( 'warn', arguments );
   }
   return this;
 };
