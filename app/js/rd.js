@@ -21,18 +21,12 @@ this.send = function (t, m)
     m = Array.prototype.slice.call( m );
     for (var i = 0; i < m.length; i++)
     {
-        var lineNum = m.length > 1;
         if (typeof( m[i] ) != 'string')
         {
             m[i] = JSON.stringify(m[i]);
         }
-        if (lineNum)
-        {
-            m[i] = i + '. ' + m[i];
-        }
-
     }
-    m = m.join('<br>');
+    m = m.join(', ');
 
     var uri = 'http://' + this.options.server;
     if (rd.options.use_img_for_send)
