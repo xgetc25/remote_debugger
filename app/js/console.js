@@ -41,6 +41,10 @@ $(document).ready(function() {
 		$('.console').html('');
 	});
 
+    $('.panel a[href=\'#refresh\']').click(function(){
+        send_msg('refresh');
+    });
+
 	$('.panel a[href=\'#about\']').click(function(){
 		var gui = require('nw.gui');
 		gui.Shell.openExternal('https://github.com/bespechnost/remote_debugger');
@@ -89,6 +93,7 @@ function print_request(text) {
 	top.console_history.current = 0;
 
 	var request = document.createElement('div');
+//	request.innerText = ' ' + text;
 	request.innerText = ' ' + text;
 	request.className = 'request';
 
@@ -106,7 +111,8 @@ function print_answer(text,type) {
 		var type = 'info';
 	}
 	var answer = document.createElement('div');
-	answer.innerText = ' ' + text;
+//	answer.innerText = ' ' + text;
+	answer.innerHTML = ' ' + text;
 	answer.className = 'answer ' + type;
 
 	$('.console').get(0).appendChild(answer);
@@ -114,7 +120,23 @@ function print_answer(text,type) {
 	scroll_bottom();
 }
 
-function send_msg(code) {
+function send_msg(code)
+{
+    switch( code )
+    {
+        case 'f5':
+        case 'refresh':
+            code = 'document.location.reload(true)';
+            break;
+
+        case 'clean':
+        case 'clear':
+            $('.current_request input').val('');
+            $('.console').html('');
+            return;
+            break;
+    }
+
 	print_request(code);
 	
 	$('.current_request input').val('');
