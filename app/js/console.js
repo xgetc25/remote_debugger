@@ -120,7 +120,7 @@ function send_msg(code) {
 	$('.current_request input').val('');
 	
 	if (top.res_comet) {
-		top.res_comet.writeHead(200, {'Content-Type': 'application/json',  'Access-Control-Allow-Origin': '*'});
+		top.res_comet.writeHead(200, {'Content-Type': 'application/x-javascript',  'Access-Control-Allow-Origin': '*'});
 		top.res_comet.end(code);
 	}
 }
@@ -148,21 +148,22 @@ function init_server() {
 
 		} else if (url_parts.pathname == '/comet.json') {
 			top.res_comet=res;
+            
 			req.on("close", function() {
 					if (!top.res_comet) return;
-			  		res.writeHead(200, {'Content-Type': 'application/json',  'Access-Control-Allow-Origin': '*'});
+			  		res.writeHead(200, {'Content-Type': 'application/x-javascript',  'Access-Control-Allow-Origin': '*'});
 					res.end('');
 					top.res_comet = false;
 			});
 
-		} else if (url_parts.pathname == '/img.gif') {
+		} else if (url_parts.pathname == '/rdebugger') {
 			var get_params = url_parts.query;
 
 			if (get_params.t && get_params.m) {
 				print_answer(get_params.m, get_params.t);  
 			}
 
-			res.writeHead(200, {'Content-Type': 'application/json',  'Access-Control-Allow-Origin': '*'});
+			res.writeHead(200, {'Content-Type': 'application/x-javascript',  'Access-Control-Allow-Origin': '*'});
 			res.end('');
 		} else {
 

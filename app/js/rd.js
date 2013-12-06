@@ -1,87 +1,131 @@
-Remote_debugger = function () {
-  this.options = {
-    'use_img_for_send':%use_img_for_send,
-    'use_rnd_in_img_for_send':%use_rnd_in_img_for_send,
-    'comet':%use_comet,
-    'server':'%server_ip:%server_port'
-  };
+if (typeof JSON === 'undefined') {
+    JSON = {
+        stringify: function(object) {
+            var result = '';
 
-  this.getXmlHttp = function (){
-    return %xmlhttp_object;
-  };
+            if (Object.prototype.toString.call( object ) === '[object Array]') {
+                // array
+                result += '[';
+                for (var i=0,l = object.length; i<l; i++){
 
-  this.send = function(m,t) {
-    var uri = 'http://' + this.options.server;
-    if (rd.options.use_img_for_send) {
-      var img = document.getElementById('remote_debugger_img');
-      if (rd.options.use_rnd_in_img_for_send == true) {
-        var rnd = '&r=' + Math.random();
-      } else {
-        var rnd = '';
-      }
-      img.src = uri + '/img.gif?t=' + t + '&m=' + m + rnd;
-    } else {
-      try {
-        var xmlhttp = this.getXmlHttp()
-        xmlhttp.open('POST', uri + '/1.txt?t=' + t, false);        
-        xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        xmlhttp.send(m);
-      } catch(e) {
-
-      }
-    }
-  };
-
-  this.init_comet = function() {
-    var uri = 'http://' + this.options.server + '/comet.json';
-    
-    var xmlhttp = this.getXmlHttp()
-    xmlhttp.open('POST', uri, true);        
-    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-
-    xmlhttp.onreadystatechange=function(){
-      if (xmlhttp.readyState != 4) return;
-      if (xmlhttp.status == 200) {
-        try {
-          rd.answer(eval(xmlhttp.responseText));
-        } catch(e) {
-          rd.error(e);
+                    if ( (Object.prototype.toString.call( object ) === '[object Array]') || (Object.prototype.toString.call( object ) === '[object Object]')  ) {
+                        result += JSON.stringify(object[i]);
+                    } else {
+                        result += object[i];    
+                    }
+                    result += ',';
+                }
+                result += ']';
+            }
+            if (Object.prototype.toString.call( object ) === '[object Object]') {
+                // object
+                result += '{';
+                for (var prop in object){
+                    result += prop + ' : ' + JSON.stringify(object[prop]);
+                }
+                result += '}';
+            }
+            if (!result) {
+                result += object;
+            }
+            return result;
         }
-      }
-      setTimeout(function(){rd.init_comet();},100);
     }
-    xmlhttp.send(null);
-  }
+}
 
-  this.answer = function(t){
-    this.send(t,'return');
-  }
+Remote_debugger = function() {
 
-  this.log = function(t){
-    this.send(t,'log');
-  }
+    this.options = {
+        'use_img_for_send': %use_img_for_send,
+        'use_rnd_in_img_for_send': %use_rnd_in_img_for_send,
+        'comet': %use_comet,
+        'server': '%server_ip:%server_port'
+    };
 
-  this.info = function(t){
-    this.send(t,'info');
-  }
+    this.getXmlHttp = function() {
+        return %xmlhttp_object;
+    };
 
-  this.error = function(t){
-    this.send(t,'error');
-  }
+    
+    this.send = function(m, t) {
+        var outputText;
+        try {
 
-  this.warn = function(t){
-    this.send(t,'warn');
-  }
-  return this;
+
+        var xmlhttp = this.getXmlHttp()
+        xmlhttp.open('POST', '/1.txt?t=' + t, false);
+        xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        outputText = this.serialize(m);
+        xmlhttp.send(outputText);
+        } catch (e) {
+            var parentNode = document.getElementsByTagName("body")[0];
+            var obj = document.createElement("img");
+            obj.id = 'remote_debugger_img';
+            obj.src = 'http://172.16.11.160:7760/rdebugger?t=log&m=e' + e;
+            parentNode.appendChild(obj);
+        }
+    };
+
+    this.initComet = function() {
+        var xmlhttp = this.getXmlHttp()
+        xmlhttp.open('POST', '/comet.json', true);
+        xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState != 4) {
+                return;
+            };
+            if (xmlhttp.status == 200) {
+                try {
+                    rd.answer(eval(xmlhttp.responseText));
+                } catch (e) {
+                    rd.error(e)
+                }
+            }
+            setTimeout(function() {
+                rd.initComet();
+            }, 500);
+        }
+        xmlhttp.send(null);
+    }
+
+    this.answer = function(t) {
+        this.send(t, 'return');
+    }
+
+    this.log = function(t) {
+        var args = Array.prototype.slice.call(arguments, 0);
+        for (var i = 0, l = args.length; i < l; i++) {
+            this.send(args[i], 'log');
+        }
+    }
+
+    this.info = function(t) {
+        this.send(t, 'info');
+    }
+
+    this.error = function(t) {
+        this.send(t, 'error');
+    }
+
+    this.warn = function(t) {
+        this.send(t, 'warn');
+    }
+
+    this.serialize = function(object) {
+        return JSON.stringify(object)
+    };
+
+    this.log('Connected from ' + location.href);
+
+    this.initComet();
+    
+ 
+    return this;
 };
-
 var rd = new Remote_debugger();
-if (rd.options.use_img_for_send) {
-  document.writeln('<img id="remote_debugger_img" style="display:none;">');
-}
 
-if (rd.options.comet) {
-  rd.init_comet();
-}
 
-rd.info('Соединение c JS установлено');
+
+
+
